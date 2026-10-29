@@ -1540,10 +1540,61 @@ section:has(> .sf) { position: relative; }
 /* the drawing sits straight on the card: no tinted box behind it */
 .cal-art { background: none; box-shadow: none; border-radius: 0; overflow: visible; }
 .cal-st { top: 4px; left: 0; }
+
+/* intro (v31): white page, the black devx logo holds in the centre; the four act fields rise up behind it one after another
+   (blue, pink, green, orange), then the whole screen washes out into the page */
+.intro { background: #fff; display: grid; place-items: center; }
+.intro::after { display: none; }
+.in-f, .in-f i { position: absolute; inset: 0; }
+.in-f i { background-size: cover; background-position: center; opacity: 0; transform: translateY(18%) scale(1.06); }
+.intro.go .in-f i { animation: in-rise 1.5s var(--ease) forwards; animation-delay: calc(var(--n) * 260ms); }
+@keyframes in-rise { 0% { opacity: 0; transform: translateY(18%) scale(1.06); } 35% { opacity: 1; } 100% { opacity: 1; transform: none; } }
+.in-logo { position: relative; z-index: 2; width: min(220px, 46vw); height: auto; color: #14162e; opacity: 0; transform: scale(.96); transition: opacity .5s ease, transform 1.4s var(--ease); }
+.intro.go .in-logo { opacity: 1; transform: none; }
+.intro.out { transition: opacity .8s ease; }
+/* card at 88% white; without / with devx is a two-tab switch that drives the sentence and the drawing */
+.cal-in { background: rgba(255,255,255,.88); }
+.cal-sw { display: inline-flex; gap: 2px; margin-top: 26px; padding: 4px; border-radius: 12px; background: rgba(20,22,46,.05); }
+.cal-sw button { height: 34px; padding: 0 14px; border-radius: 9px; font: 500 14px/1 var(--text); color: rgba(20,22,46,.55); transition: background .3s, color .3s, box-shadow .3s; }
+.cal-sw button:hover { color: #14162e; }
+.cal-sw button[aria-selected="true"] { background: #fff; color: #14162e; box-shadow: 0 1px 2px rgba(20,22,46,.08), 0 0 0 1px rgba(20,22,46,.05); }
+.cal-sw button[data-s="1"][aria-selected="true"] { color: color-mix(in srgb, var(--nc) 80%, #14162e); }
+.cal-say { display: grid; margin: 16px 0 0; padding: 0; border: 0; min-height: 4.4em; font-size: 16px; line-height: 1.45; }
+.cal-say span { grid-area: 1 / 1; transition: opacity .35s ease, transform .5s var(--ease); }
+.cal-say .s0 { color: rgba(20,22,46,.6); }
+.cal-say .s1 { color: #14162e; font-weight: 500; opacity: 0; transform: translateY(6px); }
+.cal-act.s1 .cal-say .s0 { opacity: 0; transform: translateY(-6px); }
+.cal-act.s1 .cal-say .s1 { opacity: 1; transform: none; }
+.cal-say { align-self: stretch; width: 100%; max-width: 44ch; min-height: 4.4em; }
+/* how we work: the deliverable cards are glass too, 88% white with a blur, so the side field shows through softly */
+.tl-doc .vig { background: rgba(255,255,255,.88); -webkit-backdrop-filter: blur(20px) saturate(1.25); backdrop-filter: blur(20px) saturate(1.25);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.8), 0 0 0 1px rgba(20,22,46,.06), 0 18px 40px -16px rgba(20,22,46,.3); }
+.cal-tx p.cal-say { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 0; border: 0; margin-top: 16px; font-size: 16px; }
+
+/* navbar menus as glass, a step more solid than the bar so they read clearly; the same look over the night sections,
+   where the old dark-menu rules had turned the text near-white on a white panel */
+.nav .dd .mega, .nav.dark .dd .mega, .nav .all-m, .nav.dark .all-m { background: rgba(255,255,255,.86); -webkit-backdrop-filter: blur(24px) saturate(1.5); backdrop-filter: blur(24px) saturate(1.5);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.85), 0 0 0 1px rgba(20,22,46,.07), 0 1px 3px rgba(20,22,46,.07), 0 8px 18px rgba(20,22,46,.07), 0 24px 48px rgba(20,22,46,.1); }
+.nav .dd .mega li a, .nav.dark .dd .mega li a, .nav .all-m li a, .nav.dark .all-m li a { color: rgba(20,22,46,.88); }
+.nav .dd .mega li a:hover, .nav.dark .dd .mega li a:hover, .nav .all-m li a:hover, .nav.dark .all-m li a:hover { background: rgba(20,22,46,.05); color: #14162e; }
+.nav .dd .mega li a .ic, .nav.dark .dd .mega li a .ic, .nav .all-m li a .ic, .nav.dark .all-m li a .ic { background: rgba(20,22,46,.06); color: #14162e; }
+.nav .all-m h4, .nav.dark .all-m h4 { color: rgba(20,22,46,.45); }
+.nav .dd .mega li.all a, .nav.dark .dd .mega li.all a { color: rgba(20,22,46,.55); }
+/* over the night sections the glass bar would turn murky grey; it goes more solid there and keeps its white edge */
+.nav.dark .bar { background: rgba(255,255,255,.84); box-shadow: inset 0 0 0 1px rgba(255,255,255,.9), 0 1px 3px rgba(0,0,0,.2), 0 18px 40px -8px rgba(0,0,0,.35); }
+.nav.dark .dd > button { color: rgba(20,22,46,.72); }
+.nav.dark .dd > button:hover, .nav.dark .dd > button[aria-expanded="true"] { color: #14162e; background: rgba(20,22,46,.06); }
+.nav.dark .dd .mega, .nav.dark .all-m { background: rgba(255,255,255,.94); }
+/* a backdrop-filter on the bar stops the menus inside it from frosting the page; the bar's frost moves to a layer behind it */
+.bar, .nav.scrolled .bar, .nav.dark .bar { -webkit-backdrop-filter: none; backdrop-filter: none; isolation: isolate; }
+.bar::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5); }
+/* the pastel fields end in white at the foot, so they hang from the top of the panel */
+.cal-bg i { background-position: 50% 0; }
 </style>
 </head><body>
 <script>(function(){var d=document.documentElement,c="js-intro";if(matchMedia("(prefers-reduced-motion: reduce)").matches)c="no-intro";else{try{if(sessionStorage.getItem("dx-intro"))c="js-intro seen"}catch(e){}}d.className+=" "+c})()</script>
-<div class="intro" id="intro" aria-hidden="true"><canvas></canvas></div>
+<div class="intro" id="intro" aria-hidden="true"><div class="in-f"><i style="background-image:url(assets/v31/f3-blue.webp);--n:0"></i><i style="background-image:url(assets/v31/f3-green.webp);--n:1"></i><i style="background-image:url(assets/v31/f3-pink.webp);--n:2"></i><i style="background-image:url(assets/v31/f3-orange.webp);--n:3"></i></div><svg class="in-logo" viewBox="0 0 139.518 28.7388"><use href="#devx-logo"/></svg></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="devx-logo" viewBox="0 0 139.518 28.7388">
 <g>
 <g>
@@ -1723,32 +1774,36 @@ section:has(> .sf) { position: relative; }
 <div class="cal-run" id="calrun">
   <div class="cal-pin">
     <div class="cal-panel">
-      <div class="cal-bg" aria-hidden="true"><i class="on" style="background-image:url(assets/v31/f2-gw.webp)"></i><i class="" style="background-image:url(assets/v31/f2-ops.webp)"></i><i class="" style="background-image:url(assets/v31/f2-fin.webp)"></i><i class="" style="background-image:url(assets/v31/f2-lz.webp)"></i></div>
-      <div class="cal-icons" role="group" aria-label="The four pieces, in order"><button type="button" class="cal-i on" data-k="0" data-f="security" aria-label="AI gateway"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="M8 6h1.5a3 3 0 013 3 3 3 0 003 3h.5M8 18h1.5a3 3 0 003-3 3 3 0 013-3"/></svg></button><button type="button" class="cal-i" data-k="1" data-f="reliability" aria-label="LLMOps pipelines"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 11A7.5 7.5 0 0118 6.5L20 8.5"/><path d="M20 4v4.5h-4.5"/><path d="M19.5 13A7.5 7.5 0 016 17.5L4 15.5"/><path d="M4 20v-4.5h4.5"/></svg></button><button type="button" class="cal-i" data-k="2" data-f="cost" aria-label="FinOps"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="10" cy="7" rx="6" ry="3"/><path d="M4 7v5c0 1.7 2.7 3 6 3s6-1.3 6-3V7"/><path d="M4 12v5c0 1.7 2.7 3 6 3 1.6 0 3-.3 4.1-.8M16 12.5c2.3.3 4 1.3 4 2.5v2c0 1.4-2 2.6-4.6 2.9"/></svg></button><button type="button" class="cal-i" data-k="3" data-f="speed" aria-label="Landing zone"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l8.5 4.5L12 12.5 3.5 8 12 3.5z"/><path d="M3.5 12.5L12 17l8.5-4.5"/><path d="M3.5 16.5L12 21l8.5-4.5"/></svg></button></div>
-      <div class="cal-acts"><article class="cal-act on" data-k="0" data-f="security" style="--bg:url(assets/v31/f2-gw.webp)">
+      <div class="cal-bg" aria-hidden="true"><i class="on" style="background-image:url(assets/v31/f3-blue.webp)"></i><i class="" style="background-image:url(assets/v31/f3-green.webp)"></i><i class="" style="background-image:url(assets/v31/f3-pink.webp)"></i><i class="" style="background-image:url(assets/v31/f3-orange.webp)"></i></div>
+      <div class="cal-icons" role="group" aria-label="The four pieces, in order"><button type="button" class="cal-i on" data-k="0" data-f="speed" aria-label="AI gateway"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="M8 6h1.5a3 3 0 013 3 3 3 0 003 3h.5M8 18h1.5a3 3 0 003-3 3 3 0 013-3"/></svg></button><button type="button" class="cal-i" data-k="1" data-f="reliability" aria-label="LLMOps pipelines"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 11A7.5 7.5 0 0118 6.5L20 8.5"/><path d="M20 4v4.5h-4.5"/><path d="M19.5 13A7.5 7.5 0 016 17.5L4 15.5"/><path d="M4 20v-4.5h4.5"/></svg></button><button type="button" class="cal-i" data-k="2" data-f="security" aria-label="FinOps"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="10" cy="7" rx="6" ry="3"/><path d="M4 7v5c0 1.7 2.7 3 6 3s6-1.3 6-3V7"/><path d="M4 12v5c0 1.7 2.7 3 6 3 1.6 0 3-.3 4.1-.8M16 12.5c2.3.3 4 1.3 4 2.5v2c0 1.4-2 2.6-4.6 2.9"/></svg></button><button type="button" class="cal-i" data-k="3" data-f="cost" aria-label="Landing zone"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l8.5 4.5L12 12.5 3.5 8 12 3.5z"/><path d="M3.5 12.5L12 17l8.5-4.5"/><path d="M3.5 16.5L12 21l8.5-4.5"/></svg></button></div>
+      <div class="cal-acts"><article class="cal-act on" data-k="0" data-f="speed" style="--bg:url(assets/v31/f3-blue.webp)">
         <div class="cal-in">
           <div class="cal-tx"><span class="cal-chip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="M8 6h1.5a3 3 0 013 3 3 3 0 003 3h.5M8 18h1.5a3 3 0 003-3 3 3 0 013-3"/></svg>AI gateway</span><h3>One door for every model.</h3>
-            <p class="td"><span>Today</span>Shadow AI: keys in notebooks, no inventory of who calls which model</p><p class="dx"><span>With devx</span>One AI gateway: every model call authenticated, logged, metered and routed by policy</p>
+            <div class="cal-sw" role="tablist" aria-label="Without and with devx"><button type="button" role="tab" data-s="0" aria-selected="true">Without devx</button><button type="button" role="tab" data-s="1" aria-selected="false">With devx</button></div>
+            <p class="cal-say"><span class="s0">Shadow AI: keys in notebooks, no inventory of who calls which model</span><span class="s1">One AI gateway: every model call authenticated, logged, metered and routed by policy</span></p>
             <a class="tlink" href="#piece-gw" data-jump>See what we build <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-          <div class="cal-art"><span class="cal-st">Today</span><canvas aria-hidden="true"></canvas></div>
-        </div></article><article class="cal-act" data-k="1" data-f="reliability" style="--bg:url(assets/v31/f2-ops.webp)">
+          <div class="cal-art"><canvas aria-hidden="true"></canvas></div>
+        </div></article><article class="cal-act" data-k="1" data-f="reliability" style="--bg:url(assets/v31/f3-green.webp)">
         <div class="cal-in">
           <div class="cal-tx"><span class="cal-chip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 11A7.5 7.5 0 0118 6.5L20 8.5"/><path d="M20 4v4.5h-4.5"/><path d="M19.5 13A7.5 7.5 0 016 17.5L4 15.5"/><path d="M4 20v-4.5h4.5"/></svg>LLMOps pipelines</span><h3>Ship prompts the way you ship software.</h3>
-            <p class="td"><span>Today</span>Models shipped by hand, prompts edited in production</p><p class="dx"><span>With devx</span>Versioned prompts, models and retrievers, with eval gates in CI/CD, canary releases and one-click rollback</p>
+            <div class="cal-sw" role="tablist" aria-label="Without and with devx"><button type="button" role="tab" data-s="0" aria-selected="true">Without devx</button><button type="button" role="tab" data-s="1" aria-selected="false">With devx</button></div>
+            <p class="cal-say"><span class="s0">Models shipped by hand, prompts edited in production</span><span class="s1">Versioned prompts, models and retrievers, with eval gates in CI/CD, canary releases and one-click rollback</span></p>
             <a class="tlink" href="#piece-ops" data-jump>See what we build <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-          <div class="cal-art"><span class="cal-st">Today</span><canvas aria-hidden="true"></canvas></div>
-        </div></article><article class="cal-act" data-k="2" data-f="cost" style="--bg:url(assets/v31/f2-fin.webp)">
+          <div class="cal-art"><canvas aria-hidden="true"></canvas></div>
+        </div></article><article class="cal-act" data-k="2" data-f="security" style="--bg:url(assets/v31/f3-pink.webp)">
         <div class="cal-in">
           <div class="cal-tx"><span class="cal-chip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="10" cy="7" rx="6" ry="3"/><path d="M4 7v5c0 1.7 2.7 3 6 3s6-1.3 6-3V7"/><path d="M4 12v5c0 1.7 2.7 3 6 3 1.6 0 3-.3 4.1-.8M16 12.5c2.3.3 4 1.3 4 2.5v2c0 1.4-2 2.6-4.6 2.9"/></svg>FinOps</span><h3>Know what every answer costs.</h3>
-            <p class="td"><span>Today</span>No one knows the cost per request; GPU capacity bought on hope</p><p class="dx"><span>With devx</span>Cost to serve per use case, token budgets per team, and routing that sends simple work to smaller models</p>
+            <div class="cal-sw" role="tablist" aria-label="Without and with devx"><button type="button" role="tab" data-s="0" aria-selected="true">Without devx</button><button type="button" role="tab" data-s="1" aria-selected="false">With devx</button></div>
+            <p class="cal-say"><span class="s0">No one knows the cost per request; GPU capacity bought on hope</span><span class="s1">Cost to serve per use case, token budgets per team, and routing that sends simple work to smaller models</span></p>
             <a class="tlink" href="#piece-fin" data-jump>See what we build <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-          <div class="cal-art"><span class="cal-st">Today</span><canvas aria-hidden="true"></canvas></div>
-        </div></article><article class="cal-act" data-k="3" data-f="speed" style="--bg:url(assets/v31/f2-lz.webp)">
+          <div class="cal-art"><canvas aria-hidden="true"></canvas></div>
+        </div></article><article class="cal-act" data-k="3" data-f="cost" style="--bg:url(assets/v31/f3-orange.webp)">
         <div class="cal-in">
           <div class="cal-tx"><span class="cal-chip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l8.5 4.5L12 12.5 3.5 8 12 3.5z"/><path d="M3.5 12.5L12 17l8.5-4.5"/><path d="M3.5 16.5L12 21l8.5-4.5"/></svg>Landing zone</span><h3>Security signs off once.</h3>
-            <p class="td"><span>Today</span>Security reviews that hold launches for months</p><p class="dx"><span>With devx</span>Pre-approved patterns for private networking, encryption keys, data residency and policy-as-code, so reviews take days</p>
+            <div class="cal-sw" role="tablist" aria-label="Without and with devx"><button type="button" role="tab" data-s="0" aria-selected="true">Without devx</button><button type="button" role="tab" data-s="1" aria-selected="false">With devx</button></div>
+            <p class="cal-say"><span class="s0">Security reviews that hold launches for months</span><span class="s1">Pre-approved patterns for private networking, encryption keys, data residency and policy-as-code, so reviews take days</span></p>
             <a class="tlink" href="#piece-lz" data-jump>See what we build <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-          <div class="cal-art"><span class="cal-st">Today</span><canvas aria-hidden="true"></canvas></div>
+          <div class="cal-art"><canvas aria-hidden="true"></canvas></div>
         </div></article></div>
     </div>
   </div>
@@ -3013,7 +3068,7 @@ section:has(> .sf) { position: relative; }
   (() => {
     const run = document.getElementById('calrun');
     if (!run) return;
-    const ACTS = [{ c: [226, 96, 146] }, { c: [52, 170, 94] }, { c: [246, 108, 58] }, { c: [67, 107, 246] }];
+    const ACTS = [{ c: [67, 107, 246] }, { c: [52, 170, 94] }, { c: [226, 96, 146] }, { c: [246, 108, 58] }];
   const INK = [20, 22, 46], WARN = [226, 72, 72], TEAMS = ['Claims', 'Service', 'Fraud', 'Search'], MODELS = ['Gemini', 'Claude', 'GPT', 'Llama'];
   const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v)), mix = (a, b, t) => a + (b - a) * t, io = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
   const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${clamp(a).toFixed(3)})`;
@@ -3098,12 +3153,19 @@ section:has(> .sf) { position: relative; }
       s.cv.width = r.width * d; s.cv.height = r.height * d; s.ctx = s.cv.getContext('2d'); s.ctx.setTransform(d, 0, 0, d, 0, 0); s.E = engine(r.width, r.height, r.width < 480); return true; };
     const drawArt = (k, t) => { const s = arts[k]; if (!s.E && !fit(s)) return; s.t = t;
       paint(s.ctx, s.E, s.E.today[k], s.E.devx[k], io(t), mixMarks(marks(k, 'td'), marks(k, 'dx'), io(t)), ACTS[k].c, t > .5 ? 'dx' : 'td');
-      s.box.classList.toggle('dx', t > .5); s.box.querySelector('.cal-st').textContent = t > .5 ? 'With devx' : 'Today'; };
+      const on = t > .5 ? 1 : 0; acts[k].classList.toggle('s1', !!on);
+      acts[k].querySelectorAll('.cal-sw button').forEach(b => b.setAttribute('aria-selected', +b.dataset.s === on ? 'true' : 'false')); };
+    // move one act's drawing (and its sentence) to without (0) or with devx (1)
+    const animTo = (k, to, ms = 1100) => { const s = arts[k]; cancelAnimationFrame(s.anim); clearTimeout(s.to);
+      if (!motion) { drawArt(k, to); return; }
+      const from = s.t, t0 = performance.now(); const step = now => { const u = clamp((now - t0) / ms); drawArt(k, from + (to - from) * u); if (u < 1) s.anim = requestAnimationFrame(step); };
+      s.anim = requestAnimationFrame(step); s.to = setTimeout(() => drawArt(k, to), ms + 200); };
     // an act arrives: hold on today for a beat, then resolve into with devx
-    const play = k => { const s = arts[k]; cancelAnimationFrame(s.anim); clearTimeout(s.to); drawArt(k, 0);
+    // an act arrives on "without devx" for a beat, then switches itself to "with devx" (unless the reader has already picked a tab)
+    const play = k => { const s = arts[k]; cancelAnimationFrame(s.anim); clearTimeout(s.to); clearTimeout(s.auto); drawArt(k, 0);
       if (!motion) { drawArt(k, 1); return; }
-      s.to = setTimeout(() => { const t0 = performance.now(); const step = now => { const t = clamp((now - t0) / 1500); drawArt(k, t); if (t < 1) s.anim = requestAnimationFrame(step); };
-        s.anim = requestAnimationFrame(step); setTimeout(() => drawArt(k, 1), 1700); }, 700); };
+      s.auto = setTimeout(() => animTo(k, 1, 1500), 900); };
+    acts.forEach((a, k) => a.querySelectorAll('.cal-sw button').forEach(b => b.addEventListener('click', () => { clearTimeout(arts[k].auto); animTo(k, +b.dataset.s); })));
     let cur = -1;
     const set = k => { if (k === cur) return; cur = k;
       [bgs, icons, acts].forEach(list => list.forEach((el, i) => el.classList.toggle('on', i === k)));
@@ -3197,26 +3259,12 @@ section:has(> .sf) { position: relative; }
   if (!motion || root.classList.contains('seen') || !el) { el && el.remove(); handover(); }
   else {
     try { sessionStorage.setItem('dx-intro', '1'); } catch (e) {}
-    const cv = el.querySelector('canvas'), ctx = cv.getContext('2d'), dpr = Math.min(2, devicePixelRatio || 1);
-    const W = innerWidth, H = innerHeight;
-    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const r = rng(11), hg = gridFor(document.getElementById('top')), cols = gridStripes(hg.xs, hg.cw, rng(3), .1, true, DEVX, p0For(document.getElementById('top'), hg));
-    cols.forEach(c => { const u = (c.x + c.w / 2) / W; c.delay = Math.abs(u - .5) * 2 * 380 + r() * 220; c.reach = .8 + .45 * c.k; });
-    const T0 = performance.now();
+    // the soft fields rise behind the logo, pass through the four colours, then wash into the white page (all CSS; see .intro)
     let handed = false;
     const finish = () => { if (handed) return; handed = true; el.classList.add('out'); handover(); setTimeout(() => el.remove(), 900); };
     el.addEventListener('click', finish);
-    setTimeout(finish, 1700);   // failsafe: hand over even if animation frames are throttled
-    const frame = now => {
-      const t = now - T0;
-      ctx.clearRect(0, 0, W, H);
-      for (const c of cols) drawCol(ctx, c, H, outCubic(clamp((t - c.delay) / 1050)) * H * c.reach, .55);
-      const w = clamp((t - 900) / 650);
-      if (w > 0) { ctx.fillStyle = `rgba(255,255,255,${inOut(w)})`; ctx.fillRect(0, 0, W, H); }
-      if (t > 1350) finish();
-      if (t < 2300 && el.isConnected) requestAnimationFrame(frame);
-    };
-    requestAnimationFrame(frame);
+    requestAnimationFrame(() => el.classList.add('go'));
+    setTimeout(finish, 1900);
   }
 })();
 </script>
